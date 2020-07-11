@@ -42,7 +42,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 											format!("{} {:#x}", string, byte)
 										}).trim().to_string();
 
-		println!("{:#x} | {} | {}", counter, bytes, instruction);
+		println!("{:<#7x}   {:<14}   {}", counter, bytes, instruction); // TODO: alignment relative to file size
 		counter += instruction.length;
 	});
 

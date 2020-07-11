@@ -69,16 +69,12 @@ impl Instruction {
 
 impl fmt::Display for Instruction {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		if self.operands.len() == 0 { 
-			return write!(f, "{:?}", self.mnemonic) 
+		match self.operands.len() {
+			0 => write!(f, "{:?}", self.mnemonic),
+			1 => write!(f, "{:?} {}", self.mnemonic, self.operands[0]),
+			2 => write!(f, "{:?} {}, {}", self.mnemonic, self.operands[0], self.operands[1]),
+			_ => panic!(format!("Could not decode '{:?}'", self.mnemonic)),
 		}
-
-		/*
-		for operand in self.operands.iter() {
-			formatted_operands += format!("{}", operand);
-		}
-		*/ // FIXME
-		write!(f, "{:?} {}", self.mnemonic, self.operands[0])
 	}
 
 }
