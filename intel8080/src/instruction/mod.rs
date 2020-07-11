@@ -15,7 +15,7 @@ enum Mnemonic {
 #[derive(Debug)]
 enum Register {
 	F, A, B, C, D, E, H, L,
-	M, PSW, // Psuedo-Registers
+	M, PSW, SP, // Psuedo-Registers
 }
 
 #[derive(Debug)]

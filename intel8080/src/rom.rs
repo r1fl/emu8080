@@ -9,7 +9,8 @@ impl Iterator for Iter<'_> {
 	type Item = Instruction;
 
 	fn next(&mut self) -> Option<Instruction> {
-		if self.offset >= self.rom.contents.len() {
+		// XXX
+		if self.offset >= self.rom.contents.len()-3 {
 			return None;
 		}
 
