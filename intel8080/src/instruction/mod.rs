@@ -1,5 +1,7 @@
 mod decode;
 
+use std::fmt;
+
 #[derive(Debug)]
 enum Mnemonic {
 	ACI, ADC, ADD, ADI, ANA, ANI, CALL, CC, CM, CMA,
@@ -14,7 +16,7 @@ enum Mnemonic {
 
 #[derive(Debug)]
 enum Register {
-	F, A, B, C, D, E, H, L,
+	A, B, C, D, E, H, L,
 	M, PSW, SP, // Psuedo-Registers
 }
 
@@ -26,11 +28,14 @@ enum Operand {
 	a16(u16),
 }
 
-impl Operand {
-	/// TODO: Format an operand to a human readable form.
-	#[allow(dead_code)]
-	fn format(&self) -> String { 
-		String::new()
+impl fmt::Display for Operand {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match self {
+			Operand::reg(val) => write!(f, "{:?}", val),
+			Operand::d8(val) => write!(f, "{:#x}", val),
+			Operand::d16(val) => write!(f, "{:#x}", val),
+			Operand::a16(val) => write!(f, "{:#x}", val),
+		}
 	}
 }
 
@@ -45,19 +50,35 @@ pub struct Instruction {
 	pub length: usize,
 	raw: RawInstruction,
 	mnemonic: Mnemonic,
-	operands: Vec<Operand>, // TODO: box
+	operands: Vec<Operand>,
 }
-
 
 impl Instruction {
 	pub fn decode(bytes: &[u8]) -> Instruction {
 		decode::decode(bytes)
 	}
 
-	/// TODO: Format an instruction to a human readable form.
-	#[allow(dead_code)]
-	fn format(instruction: &Instruction) -> String {
-		String::new()
+	pub fn bytes(&self) -> Vec<u8> {
+		let mut bytes = vec![self.raw.opcode];
+		bytes.extend_from_slice(&self.raw.data[..self.length-1]);
+		
+		bytes
+	}
+
+}
+
+impl fmt::Display for Instruction {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		if self.operands.len() == 0 { 
+			return write!(f, "{:?}", self.mnemonic) 
+		}
+
+		/*
+		for operand in self.operands.iter() {
+			formatted_operands += format!("{}", operand);
+		}
+		*/ // FIXME
+		write!(f, "{:?} {}", self.mnemonic, self.operands[0])
 	}
 
 }

@@ -35,8 +35,15 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 	let contents: Vec<u8> = fs::read(&config.filename)?;
 	let rom = intel8080::rom::load(contents);
 
+	let mut counter = 0;
 	rom.instructions().for_each(|instruction| {
-		println!("{:?}", instruction);
+		let bytes: String = instruction.bytes().iter()
+										.fold(String::new(), |string, byte| { 
+											format!("{} {:#x}", string, byte)
+										}).trim().to_string();
+
+		println!("{:#x} | {} | {}", counter, bytes, instruction);
+		counter += instruction.length;
 	});
 
 	Ok(())

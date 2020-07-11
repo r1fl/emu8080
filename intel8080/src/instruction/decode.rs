@@ -3,6 +3,13 @@ use super::*;
 use Mnemonic::*;
 use Register::*;
 
+macro_rules! unpack16 {
+	($bytes:expr) => (
+		($bytes[0] as u16) << 0 |
+		($bytes[1] as u16) << 8
+	);
+}
+
 macro_rules! instruction {
 	($raw:ident; $mnemonic:ident) => (
 		Instruction {
@@ -25,7 +32,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::d16($raw.data[1] as u16)],
+			operands: vec![Operand::d16(unpack16!($raw.data))],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -34,7 +41,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::d8($raw.data[1])],
+			operands: vec![Operand::d8($raw.data[0])],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -44,7 +51,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident a16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::d16($raw.data[1] as u16)],
+			operands: vec![Operand::d16(unpack16!($raw.data))],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -92,11 +99,6 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 	};
 
 	match instruction.opcode {
-		/*
-		0x1 => instruction!(instruction; LXI B, d16),
-		0x02 => instruction!(instruction; STAX B),
-		_ => instruction!(instruction; LXI B, d16), // XXX
-		*/
 		0x00 => instruction!(instruction; NOP),
 		0x01 => instruction!(instruction; LXI B,d16),
 		0x02 => instruction!(instruction; STAX B),
@@ -356,8 +358,6 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 	}
 
 	/*
-	0x1 => instruction!("LXI D, d16", raw_instruction), // TODO: create instruction macro
-	0x2 => instruction!(LXI, Operand::Register(A), Operand::Address(raw_instruction.data))
-	0x3 => Self::new(LXI, Operand::Register(A), Operand::Address(raw_instruction.data))
+	0x1 => instruction!("LXI D, d16", raw_instruction), // TODO: consider quotes for readability
 	*/
 }
