@@ -25,6 +25,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 	
 	// XXX why unwrap_or_else works and `!` type
 	// https://stackoverflow.com/questions/36250091/how-do-i-write-the-signature-of-a-function-that-displays-an-error-and-exits-the
+	// TODO: logs
 
 	let config = Config::parse(args).unwrap_or_else(|error_msg| {
 		eprintln!("{}", error_msg);
@@ -32,7 +33,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 	}); 
 
 	let contents: Vec<u8> = fs::read(&config.filename)?;
-	let rom = intel8080::load(contents);
+	let rom = intel8080::rom::load(contents);
 
 	rom.instructions().for_each(|instruction| {
 		println!("{:?}", instruction);

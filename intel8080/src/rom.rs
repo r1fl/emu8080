@@ -1,4 +1,4 @@
-use super::Instruction;
+use super::instruction::Instruction;
 
 pub struct Iter<'a> {
 	rom: &'a Rom,
@@ -14,7 +14,7 @@ impl Iterator for Iter<'_> {
 		}
 
 		let instruction = Instruction::decode(&self.rom.contents[self.offset..]);
-		self.offset += instruction.size;
+		self.offset += instruction.length;
 
 		Some(instruction)
 	}
@@ -25,6 +25,12 @@ pub struct Rom {
 }
 
 impl Rom {
+	pub fn load(contents: Vec<u8>) -> Rom {
+		Rom {
+			contents: contents
+		}
+	}
+
 	pub fn instructions(&self) -> Iter {
 		Iter {
 			rom: &self,
@@ -34,7 +40,5 @@ impl Rom {
 }
 
 pub fn load(contents: Vec<u8>) -> Rom {
-	Rom {
-		contents: contents
-	}
+	Rom::load(contents)
 }
