@@ -22,19 +22,19 @@ enum Register {
 
 #[derive(Debug)]
 enum Operand {
-	reg(Register),
-	d8(u8),
-	d16(u16),
-	a16(u16),
+	Reg(Register),
+	D8(u8),
+	D16(u16),
+	A16(u16),
 }
 
 impl fmt::Display for Operand {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match self {
-			Operand::reg(val) => write!(f, "{:?}", val),
-			Operand::d8(val) => write!(f, "{:#x}", val),
-			Operand::d16(val) => write!(f, "{:#x}", val),
-			Operand::a16(val) => write!(f, "{:#x}", val),
+			Operand::Reg(val) => write!(f, "{:?}", val),
+			Operand::D8(val) => write!(f, "{:#x}", val),
+			Operand::D16(val) => write!(f, "{:#x}", val),
+			Operand::A16(val) => write!(f, "{:#x}", val),
 		}
 	}
 }

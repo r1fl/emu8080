@@ -23,7 +23,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::d8($raw.data[0])],
+			operands: vec![Operand::D8($raw.data[0])],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -32,7 +32,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::d16(unpack16!($raw.data))],
+			operands: vec![Operand::D16(unpack16!($raw.data))],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -41,17 +41,16 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::d8($raw.data[0])],
+			operands: vec![Operand::D8($raw.data[0])],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
 	);
 
-
 	($raw:ident; $mnemonic:ident a16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::d16(unpack16!($raw.data))],
+			operands: vec![Operand::A16(unpack16!($raw.data))],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -62,7 +61,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::reg($reg)],
+			operands: vec![Operand::Reg($reg)],
 		}
 	);
 
@@ -71,7 +70,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::reg($reg_dst), Operand::reg($reg_src)],
+			operands: vec![Operand::Reg($reg_dst), Operand::Reg($reg_src)],
 		}
 	);
 
@@ -80,7 +79,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::d8($num)],
+			operands: vec![Operand::D8($num)],
 		}
 	);
 }
@@ -95,7 +94,7 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 
 	let instruction = RawInstruction {
 		opcode: bytes[0],
-		data: data,
+		data,
 	};
 
 	match instruction.opcode {

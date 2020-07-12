@@ -28,7 +28,7 @@ pub struct Rom {
 impl Rom {
 	pub fn load(contents: Vec<u8>) -> Rom {
 		Rom {
-			contents: contents
+			contents
 		}
 	}
 
