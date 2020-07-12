@@ -35,14 +35,19 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 	let contents: Vec<u8> = fs::read(&config.filename)?;
 	let rom = intel8080::rom::load(contents);
 
+	/*
+	 * TODO: alignment relative to file size
+	 * TODO: colors
+	 */
+
 	let mut counter = 0;
 	rom.instructions().for_each(|instruction| {
 		let bytes: String = instruction.bytes().iter()
 										.fold(String::new(), |string, byte| { 
-											format!("{} {:#x}", string, byte)
+											format!("{} {:x}", string, byte)
 										}).trim().to_string();
 
-		println!("{:<#7x}   {:<14}   {}", counter, bytes, instruction); // TODO: alignment relative to file size
+		println!("{:<#5x}   {:<8}   {}", counter, bytes, instruction); 
 		counter += instruction.length;
 	});
 
