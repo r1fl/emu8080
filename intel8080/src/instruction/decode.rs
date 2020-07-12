@@ -32,7 +32,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::D16(unpack16!($raw.data))],
+			operands: vec![Operand::Reg($reg_dst), Operand::D16(unpack16!($raw.data))],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -41,7 +41,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::D8($raw.data[0])],
+			operands: vec![Operand::Reg($reg_dst), Operand::D8($raw.data[0])],
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
