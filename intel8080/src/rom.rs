@@ -22,7 +22,7 @@ impl Iterator for Iter<'_> {
 }
 
 pub struct Rom {
-	contents: Vec<u8>,
+	pub contents: Vec<u8>,
 }
 
 impl Rom {

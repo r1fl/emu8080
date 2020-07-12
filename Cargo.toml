@@ -11,6 +11,7 @@ members = [
 
 [dependencies]
 intel8080 = { path = "./intel8080" }
+ansi_term = "0.12.1"
 
 [[bin]]
 name = "disassembler"

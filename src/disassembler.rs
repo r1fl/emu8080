@@ -2,6 +2,9 @@ use std::env;
 use std::fs;
 use std::process;
 use std::error;
+use std::cmp;
+
+use ansi_term::Color;
 
 #[derive(Debug)]
 struct Config {
@@ -20,36 +23,59 @@ impl Config {
 	}
 }
 
+const MIN_ADDR_WIDTH: usize = 9;
+
 fn main() -> Result<(), Box<dyn error::Error>> {
 	let args = env::args().collect();
-	
-	// XXX why unwrap_or_else works and `!` type
-	// https://stackoverflow.com/questions/36250091/how-do-i-write-the-signature-of-a-function-that-displays-an-error-and-exits-the
-	// TODO: logs
+
+	/*
+	 * Read file
+	 */
 
 	let config = Config::parse(args).unwrap_or_else(|error_msg| {
 		eprintln!("{}", error_msg);
 		process::exit(1);
 	}); 
 
-	let contents: Vec<u8> = fs::read(&config.filename)?;
+	let contents: Vec<u8> = fs::read(&config.filename).unwrap_or_else(|error_msg| {
+		eprintln!("{}", error_msg);
+		process::exit(1);
+	});
+
 	let rom = intel8080::rom::load(contents);
 
 	/*
-	 * TODO: alignment relative to file size
-	 * TODO: colors
+	 * Print disassembly
 	 */
 
 	let mut counter = 0;
+	let offset_width = cmp::max(MIN_ADDR_WIDTH, hex_digit_count(rom.contents.len()) + 2);
+
 	rom.instructions().for_each(|instruction| {
 		let bytes: String = instruction.bytes().iter()
 										.fold(String::new(), |string, byte| { 
-											format!("{} {:x}", string, byte)
+											format!("{} {:02x}", string, byte)
 										}).trim().to_string();
 
-		println!("{:<#5x}   {:<8}   {}", counter, bytes, instruction); 
+		println!("{}  {}  {}", 
+				Color::Green.paint(format!("{:<#01$x}", counter, offset_width)),
+				Color::Yellow.paint(format!("{:<8}", bytes)),
+				instruction); 
+
 		counter += instruction.length;
 	});
 
 	Ok(())
 }
+
+fn hex_digit_count(mut number: usize) -> usize {
+	let mut digits = 0;
+
+	loop {
+		number /= 0x10;
+		digits += 1;
+
+		if number == 0 { break digits; }
+	}
+}
+
