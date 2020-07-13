@@ -358,5 +358,6 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 
 	/*
 	0x1 => instruction!("LXI D, d16", raw_instruction), // TODO: consider quotes for readability
+	0x1 => instruction!("LXI D, d16", "SZAPC", (3, 7), &emulate.lxi, instruction), 
 	*/
 }

@@ -1,4 +1,4 @@
-use super::instruction::Instruction;
+use intel8080::Instruction;
 
 pub struct Iter<'a> {
 	rom: &'a Rom,

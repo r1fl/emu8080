@@ -6,6 +6,8 @@ use std::cmp;
 
 use ansi_term::Color;
 
+mod rom;
+
 #[derive(Debug)]
 struct Config {
 	filename: String,
@@ -28,6 +30,14 @@ const MIN_ADDR_WIDTH: usize = 9;
 fn main() -> Result<(), Box<dyn error::Error>> {
 	let args = env::args().collect();
 
+	struct Test {
+		handler: fn(usize) -> usize
+	}
+
+	let tst = Test { handler: hex_digit_count };
+
+	println!("{}", (tst.handler)(0x10000));
+
 	/*
 	 * Read file
 	 */
@@ -42,7 +52,8 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 		process::exit(1);
 	});
 
-	let rom = intel8080::rom::load(contents);
+	let rom = rom::load(contents);
+	//rom.run();
 
 	/*
 	 * Print disassembly
