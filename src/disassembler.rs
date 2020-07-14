@@ -5,80 +5,65 @@ use std::error;
 use std::cmp;
 
 use ansi_term::Color;
+use clap::clap_app;
 
 mod rom;
 
-#[derive(Debug)]
-struct Config {
-	filename: String,
-}
-
-impl Config {
-	fn parse(args: Vec<String>) -> Result<Config, String> {
-		if args.len() < 2 {
-			return Err(format!("usage: {} FILENAME", args[0]));
-		}
-		
-		Ok(Config {
-			filename: args[1].clone(),
-		})
-	}
-}
-
 const MIN_ADDR_WIDTH: usize = 9;
+const COLUMN_GAP_WIDTH: usize = 4;
 
-fn main() -> Result<(), Box<dyn error::Error>> {
-	let args = env::args().collect();
+fn main() {
+	let args = clap_app!(("HIDA Pro") =>
+		(version: "1.0")
+		(@arg PATH: +required "ROM path.")
+		//(@arg verbose: -v --verbose "Be verbose.")
+		//(@arg color: --color "Colored output.")
+	).get_matches();
 
-	struct Test {
-		handler: fn(usize) -> usize
-	}
+	let path = args.value_of("PATH").unwrap();
 
-	let tst = Test { handler: hex_digit_count };
-
-	println!("{}", (tst.handler)(0x10000));
-
-	/*
-	 * Read file
-	 */
-
-	let config = Config::parse(args).unwrap_or_else(|error_msg| {
-		eprintln!("{}", error_msg);
-		process::exit(1);
-	}); 
-
-	let contents: Vec<u8> = fs::read(&config.filename).unwrap_or_else(|error_msg| {
-		eprintln!("{}", error_msg);
+	let rom: Vec<u8> = fs::read(path).unwrap_or_else(|error_msg| {
+		eprintln!("Reading ROM: {}.", error_msg);
 		process::exit(1);
 	});
 
-	let rom = rom::load(contents);
-	//rom.run();
+	let rom = rom::load(rom);
+	disasm(rom);
+}
 
-	/*
-	 * Print disassembly
-	 */
-
+fn disasm(rom: rom::Rom) {
 	let mut counter = 0;
 	let offset_width = cmp::max(MIN_ADDR_WIDTH, hex_digit_count(rom.contents.len()) + 2);
 
 	rom.instructions().for_each(|instruction| {
-		let bytes: String = instruction.bytes().iter()
-										.fold(String::new(), |string, byte| { 
-											format!("{} {:02x}", string, byte)
-										}).trim().to_string();
+		let bytes = stringify_bytes(instruction.bytes());
 
-		println!("{}  {}  {}", 
+		println!("{}{GAP}{}{GAP}{}", 
 				Color::Green.paint(format!("{:<#01$x}", counter, offset_width)),
 				Color::Yellow.paint(format!("{:<8}", bytes)),
-				instruction); 
+				instruction,
+				GAP=" ".repeat(COLUMN_GAP_WIDTH)); 
 
 		counter += instruction.length;
 	});
-
-	Ok(())
 }
 
+/// Stringify a byte vector with items seperated by a whitespace.
+///
+/// ```
+/// assert_eq!(strigify_bytes(vec![0xbe, 0xef], String::from("be ef")))
+/// ```
+fn stringify_bytes(bytes: Vec<u8>) -> String {
+	bytes.iter().fold(String::new(), |string, byte| { 
+		format!("{} {:02x}", string, byte)
+	}).trim().to_string()
+}
+
+/// Count base 16 digits of a given number.
+///
+/// ```
+///	assert_eq!(hex_digit_count(0x1337), 4);
+/// ```
 fn hex_digit_count(mut number: usize) -> usize {
 	let mut digits = 0;
 
