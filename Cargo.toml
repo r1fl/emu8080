@@ -4,17 +4,7 @@ version = "0.1.0"
 authors = ["Itamar <itamarx22@gmail.com>"]
 edition = "2018"
 
-[workspaces]
-members = [
-	"intel8080"
-]
-
 [dependencies]
-intel8080 = { path = "./intel8080" }
 ansi_term = "0.12.1"
 clap = "~2.27.0"
-
-[[bin]]
-name = "disassembler"
-path = "src/disassembler.rs"
 
