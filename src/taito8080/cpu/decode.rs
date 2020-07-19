@@ -1,7 +1,10 @@
-use super::*;
+use super::instruction::*;
 
 use Mnemonic::*;
 use Register::*;
+
+use Operand::*;
+use Operands::*;
 
 macro_rules! unpack16 {
 	($bytes:expr) => (
@@ -16,14 +19,14 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![],
+			operands: Nothing,
 		}
 	);
 
 	($raw:ident; $mnemonic:ident d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::D8($raw.data[0])],
+			operands: One(D8($raw.data[0])),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -32,7 +35,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::Reg($reg_dst), Operand::D16(unpack16!($raw.data))],
+			operands: Two(Reg($reg_dst), D16(unpack16!($raw.data))),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -41,7 +44,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d8) => (
 		Instruction {
 			length: 2,
-			operands: vec![Operand::Reg($reg_dst), Operand::D8($raw.data[0])],
+			operands: Two(Reg($reg_dst), D8($raw.data[0])),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -50,7 +53,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident a16) => (
 		Instruction {
 			length: 3,
-			operands: vec![Operand::A16(unpack16!($raw.data))],
+			operands: One(A16(unpack16!($raw.data))),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -61,7 +64,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::Reg($reg)],
+			operands: One(Reg($reg)),
 		}
 	);
 
@@ -70,7 +73,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::Reg($reg_dst), Operand::Reg($reg_src)],
+			operands: Two(Reg($reg_dst), Reg($reg_src)),
 		}
 	);
 
@@ -79,7 +82,7 @@ macro_rules! instruction {
 			length: 1,
 			raw: $raw,
 			mnemonic: $mnemonic,
-			operands: vec![Operand::D8($num)],
+			operands: One(D8($num)),
 		}
 	);
 }
@@ -96,6 +99,10 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 		opcode: bytes[0],
 		data,
 	};
+	/*
+		0x00 => instruction!(instruction; nop, NOP),
+		0x01 => instruction!(instruction; lxi, LXI B,d16),
+	*/
 
 	match instruction.opcode {
 		0x00 => instruction!(instruction; NOP),
@@ -357,7 +364,9 @@ pub fn decode(bytes: &[u8]) -> Instruction {
 	}
 
 	/*
-	0x1 => instruction!("LXI D, d16", raw_instruction), // TODO: consider quotes for readability
 	0x1 => instruction!("LXI D, d16", "SZAPC", (3, 7), &emulate.lxi, instruction), 
+	//0x01 => instruction!(instruction; || {lxi(&state.a, &state.b)} ;lxi, LXI B,d16),
+	0x1 => instruction!("LXI D, d16", raw_instruction), // TODO: consider quotes for readability
+	0xff => instruction!(("RST 7"), &emulate.rst, instruction),
 	*/
 }

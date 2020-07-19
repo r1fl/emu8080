@@ -1,33 +1,8 @@
-mod decode;
-
 use std::fmt;
-
-struct ConditionFlags {
-	Zero: bool,
-	Sign: bool,
-	Parity: bool,
-	Carry: bool,
-	AuxCarry: bool,
-}
-
-#[allow(dead_code)]
-struct State {
-	condition: ConditionFlags,
-	a: u16,
-	b: u16,
-	c: u16,
-	d: u16,
-	e: u16,
-	h: u16,
-	l: u16,
-	sp: u16,
-	pc: u16,
-	memory: Box<[u8]>,
-	int_enable: bool
-}
+use super::decode;
 
 #[derive(Debug)]
-enum Mnemonic {
+pub enum Mnemonic {
 	ACI, ADC, ADD, ADI, ANA, ANI, CALL, CC, CM, CMA,
 	CMC, CMP, CNC, CNZ, CP, CPE, CPI, CPO, CZ, DAA,
 	DAD, DCR, DCX, DI, EI, HLT, IN, INR, INX, JC, JM,
@@ -39,13 +14,13 @@ enum Mnemonic {
 }
 
 #[derive(Debug)]
-enum Register {
+pub enum Register {
 	A, B, C, D, E, H, L,
 	M, PSW, SP, // Psuedo-Registers
 }
 
 #[derive(Debug)]
-enum Operand {
+pub enum Operand {
 	Reg(Register),
 	D8(u8),
 	D16(u16),
@@ -65,16 +40,23 @@ impl fmt::Display for Operand {
 
 #[derive(Debug)]
 pub struct RawInstruction {
-	opcode: u8,
-	data: [u8; 2],
+	pub opcode: u8,
+	pub data: [u8; 2],
+}
+
+#[derive(Debug)]
+pub enum Operands {
+	Nothing,
+	One(Operand),
+	Two(Operand, Operand),
 }
 
 #[derive(Debug)]
 pub struct Instruction {
 	pub length: usize,
-	raw: RawInstruction,
-	mnemonic: Mnemonic,
-	operands: Vec<Operand>,
+	pub raw: RawInstruction,
+	pub mnemonic: Mnemonic,
+	pub operands: Operands,
 }
 
 impl Instruction {
@@ -93,11 +75,14 @@ impl Instruction {
 
 impl fmt::Display for Instruction {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		match self.operands.len() {
-			0 => write!(f, "{:?}", self.mnemonic),
-			1 => write!(f, "{:?} {}", self.mnemonic, self.operands[0]),
-			2 => write!(f, "{:?} {}, {}", self.mnemonic, self.operands[0], self.operands[1]),
-			_ => panic!(format!("Could not decode '{:?}'", self.mnemonic)),
+		use Operands::*;
+
+		match &self.operands {
+			Nothing				=> write!(f, "{:?}", self.mnemonic),
+			One(operand)		=> write!(f, "{:?} {}", self.mnemonic, operand),
+			Two(src, dst)		=> write!(f, "{:?} {}, {}", self.mnemonic, dst, src),
+			//Two(operands @ ..)	=> write!(f, "{:?} {}, {}", self.mnemonic, operands.0, operands.1),
+			_					=> panic!(format!("Could not decode '{:?}'", self.mnemonic)),
 		}
 	}
 

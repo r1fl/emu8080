@@ -7,10 +7,15 @@ use std::cmp;
 use ansi_term::Color;
 use clap::clap_app;
 
-mod rom;
+use emu8080::taito8080::rom;
 
-const MIN_ADDR_WIDTH: usize = 9;
 const COLUMN_GAP_WIDTH: usize = 4;
+const MIN_ADDR_WIDTH: usize = 9;
+
+macro_rules! addr_width {
+	($max_addr:expr) => 
+		( cmp::max(MIN_ADDR_WIDTH, hex_digit_count($max_addr) + 2) );
+}
 
 fn main() {
 	let args = clap_app!(("HIDA Pro") =>
@@ -33,7 +38,7 @@ fn main() {
 
 fn disasm(rom: rom::Rom) {
 	let mut counter = 0;
-	let offset_width = cmp::max(MIN_ADDR_WIDTH, hex_digit_count(rom.contents.len()) + 2);
+	let offset_width = addr_width!(rom.contents.len());
 
 	rom.instructions().for_each(|instruction| {
 		let bytes = stringify_bytes(instruction.bytes());
@@ -46,17 +51,6 @@ fn disasm(rom: rom::Rom) {
 
 		counter += instruction.length;
 	});
-}
-
-/// Stringify a byte vector with items seperated by a whitespace.
-///
-/// ```
-/// assert_eq!(strigify_bytes(vec![0xbe, 0xef], String::from("be ef")))
-/// ```
-fn stringify_bytes(bytes: Vec<u8>) -> String {
-	bytes.iter().fold(String::new(), |string, byte| { 
-		format!("{} {:02x}", string, byte)
-	}).trim().to_string()
 }
 
 /// Count base 16 digits of a given number.
@@ -73,5 +67,16 @@ fn hex_digit_count(mut number: usize) -> usize {
 
 		if number == 0 { break digits; }
 	}
+}
+
+/// Stringify a byte vector with items seperated by a whitespace.
+///
+/// ```
+/// assert_eq!(strigify_bytes(vec![0xbe, 0xef], String::from("be ef")))
+/// ```
+fn stringify_bytes(bytes: Vec<u8>) -> String {
+	bytes.iter().fold(String::new(), |string, byte| { 
+		format!("{} {:02x}", string, byte)
+	}).trim().to_string()
 }
 

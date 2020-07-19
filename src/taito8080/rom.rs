@@ -1,4 +1,4 @@
-use intel8080::Instruction;
+use super::cpu::instruction::Instruction;
 
 pub struct Iter<'a> {
 	rom: &'a Rom,
@@ -9,8 +9,7 @@ impl Iterator for Iter<'_> {
 	type Item = Instruction;
 
 	fn next(&mut self) -> Option<Instruction> {
-		// XXX
-		if self.offset >= self.rom.contents.len()-3 {
+		if self.offset >= self.rom.contents.len()-1 {
 			return None;
 		}
 
