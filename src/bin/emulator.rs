@@ -27,6 +27,7 @@ pub fn main() {
 
 fn emulate(rom: rom::Rom) -> Result<(), ()> {
 	let mut cpu = cpu::state::State::init(Box::new([1,2]));
+	println!("{:#?}", cpu);
 
 	for instruction in rom.instructions() {
 		cpu.execute(instruction);

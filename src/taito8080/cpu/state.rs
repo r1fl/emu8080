@@ -1,56 +1,64 @@
 use super::instruction::*;
 use super::execute;
 
-use Operand::*;
-use Operands::*;
-
-#[derive(Default)]
-struct ConditionFlags {
-	Zero: bool,
-	Sign: bool,
-	Parity: bool,
-	Carry: bool,
-	AuxCarry: bool,
+#[allow(dead_code)]
+#[derive(Debug, Default)]
+pub struct ConditionFlags {
+	zero: bool,
+	sign: bool,
+	parity: bool,
+	carry: bool,
+	aux_carry: bool,
 }
 
-// TODO: define register pairs as a union 
-#[derive(Default)]
+/*
+struct State {
+	a: &RegisterPair,
+	b: &RegisterPair,
+}
+
+
+init() {
+	let a = RegisterPair { msb: 0 };
+	state.a = a.msb;
+	state.b = a.lsb;
+}
+*/
+#[repr(C)]
+union RegisterPair {
+	msb: u16,
+	lsb: u8,
+}
+
+#[derive(Default, Debug)]
 pub struct State {
-	condition: ConditionFlags,
-	a: u16,
-	f: u8,
-	b: u16,
-	c: u8,
-	d: u16,
-	e: u8,
-	h: u16,
-	l: u8,
-	sp: u16,
-	pc: u16,
-	memory: Box<[u8]>,
-	int_enable: bool
+	pub a: u8,
+	pub f: u8,
+
+	pub b: u8,
+	pub c: u8,
+
+	pub d: u8,
+	pub e: u8,
+
+	pub h: u8,
+	pub l: u8,
+
+	pub sp: u16,
+	pub pc: u16,
+
+	pub flags: ConditionFlags,
+	pub memory: Box<[u8]>,
+	pub int_enable: bool
 }
 
 impl State {
+	#[allow(unused_variables)]
 	pub fn init(mem: Box<[u8]>) -> Self {
 		Default::default()
 	}
 
 	pub	fn execute(&mut self, instruction: Instruction) {
-		use Mnemonic::*;
-
-		match instruction {
-			/*
-			Instruction { 
-				mnemonic: LXI, 
-				operands: Two(Reg(dst), D16(src)), .. 
-			} => execute::lxi(self, dst, src), 
-			*/
-
-			//instruction!(_; LXI B,d16; Two(Reg(dst), D16(src))) => execute::unimplemented(self)
-			//instruction!(_; LXI B,d16; lxi) => execute::unimplemented(self)
-
-			_ => execute::unimplemented(self),
-		};
+		execute::execute(self, instruction)
 	}
 }

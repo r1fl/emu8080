@@ -78,11 +78,10 @@ impl fmt::Display for Instruction {
 		use Operands::*;
 
 		match &self.operands {
-			Nothing				=> write!(f, "{:?}", self.mnemonic),
-			One(operand)		=> write!(f, "{:?} {}", self.mnemonic, operand),
-			Two(src, dst)		=> write!(f, "{:?} {}, {}", self.mnemonic, dst, src),
+			Nothing			=> write!(f, "{:?}", self.mnemonic),
+			One(operand)	=> write!(f, "{:?} {}", self.mnemonic, operand),
+			Two(src, dst)	=> write!(f, "{:?} {}, {}", self.mnemonic, dst, src),
 			//Two(operands @ ..)	=> write!(f, "{:?} {}, {}", self.mnemonic, operands.0, operands.1),
-			_					=> panic!(format!("Could not decode '{:?}'", self.mnemonic)),
 		}
 	}
 

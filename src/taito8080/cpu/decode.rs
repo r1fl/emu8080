@@ -87,11 +87,8 @@ macro_rules! instruction {
 	);
 }
 
-
 #[inline(always)]
 pub fn decode(bytes: &[u8]) -> Instruction {
-	//! Construct a new instruction from raw bytes.
-	
 	let mut data = [0; 2];
 	data.clone_from_slice(&bytes[1..3]);
 

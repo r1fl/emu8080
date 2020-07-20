@@ -1,7 +1,5 @@
-use std::env;
 use std::fs;
 use std::process;
-use std::error;
 use std::cmp;
 
 use ansi_term::Color;
@@ -56,7 +54,7 @@ fn disasm(rom: rom::Rom) {
 /// Count base 16 digits of a given number.
 ///
 /// ```
-///	assert_eq!(hex_digit_count(0x1337), 4);
+/// assert_eq!(hex_digit_count(0x1337), 4);
 /// ```
 fn hex_digit_count(mut number: usize) -> usize {
 	let mut digits = 0;
