@@ -1,6 +1,17 @@
 use std::fmt;
 use super::decode;
 
+/*
+#[macro_export]
+macro_rules! unpack16 {
+	($bytes:expr) => (
+		($bytes[0] as u16) << 0 |
+		($bytes[1] as u16) << 8
+	);
+}
+*/
+
+
 #[derive(Debug)]
 pub enum Mnemonic {
 	ACI, ADC, ADD, ADI, ANA, ANI, CALL, CC, CM, CMA,

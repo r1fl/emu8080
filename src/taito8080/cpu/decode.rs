@@ -6,13 +6,6 @@ use Register::*;
 use Operand::*;
 use Operands::*;
 
-macro_rules! unpack16 {
-	($bytes:expr) => (
-		($bytes[0] as u16) << 0 |
-		($bytes[1] as u16) << 8
-	);
-}
-
 macro_rules! instruction {
 	($raw:ident; $mnemonic:ident) => (
 		Instruction {
@@ -35,7 +28,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident $reg_dst:ident, d16) => (
 		Instruction {
 			length: 3,
-			operands: Two(Reg($reg_dst), D16(unpack16!($raw.data))),
+			operands: Two(Reg($reg_dst), D16(u16::from_le_bytes($raw.data))),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}
@@ -53,7 +46,7 @@ macro_rules! instruction {
 	($raw:ident; $mnemonic:ident a16) => (
 		Instruction {
 			length: 3,
-			operands: One(A16(unpack16!($raw.data))),
+			operands: One(A16(u16::from_le_bytes($raw.data))),
 			raw: $raw,
 			mnemonic: $mnemonic,
 		}

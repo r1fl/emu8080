@@ -11,25 +11,6 @@ pub struct ConditionFlags {
 	aux_carry: bool,
 }
 
-/*
-struct State {
-	a: &RegisterPair,
-	b: &RegisterPair,
-}
-
-
-init() {
-	let a = RegisterPair { msb: 0 };
-	state.a = a.msb;
-	state.b = a.lsb;
-}
-*/
-#[repr(C)]
-union RegisterPair {
-	msb: u16,
-	lsb: u8,
-}
-
 #[derive(Default, Debug)]
 pub struct State {
 	pub a: u8,
