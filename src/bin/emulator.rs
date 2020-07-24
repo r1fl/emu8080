@@ -22,7 +22,25 @@ pub fn main() {
 	});
 
 	let rom = rom::load(rom);
-	emulate(rom);
+
+	/*
+	 * Test
+	 */
+
+	//let mem: Vec<[u8]> = Vec::with_capacity(100);
+	let mem: Box<[u8]> = Box::new([1; 100]);
+	let mut cpu = cpu::state::State::init(mem);
+
+	let bytes = [0x11u8, 0x13, 0x37];
+	let instruction = cpu::instruction::Instruction::decode(&bytes);
+
+	println!("{}", instruction);
+	cpu.execute(instruction);
+
+	println!("{:#x?}", cpu);
+	//println!("{:?}", cpu.memory[0..10]);
+
+	//emulate(rom);
 }
 
 fn emulate(rom: rom::Rom) -> Result<(), ()> {

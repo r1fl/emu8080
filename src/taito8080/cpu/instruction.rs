@@ -31,6 +31,13 @@ pub enum Register {
 }
 
 #[derive(Debug)]
+pub enum Operands {
+	Nothing,
+	One(Operand),
+	Two(Operand, Operand),
+}
+
+#[derive(Debug)]
 pub enum Operand {
 	Reg(Register),
 	D8(u8),
@@ -53,13 +60,6 @@ impl fmt::Display for Operand {
 pub struct RawInstruction {
 	pub opcode: u8,
 	pub data: [u8; 2],
-}
-
-#[derive(Debug)]
-pub enum Operands {
-	Nothing,
-	One(Operand),
-	Two(Operand, Operand),
 }
 
 #[derive(Debug)]

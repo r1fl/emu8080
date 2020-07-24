@@ -30,69 +30,79 @@ pub fn execute(state: &mut State, instruction: Instruction) {
 			mvi(memory, instruction.raw.data[0])
 		},														// MVI M,d8
 
-		0x40 => unimplemented!(), 								// MOV B,B
-		0x41 => unimplemented!(), 								// MOV B,C
-		0x42 => unimplemented!(), 								// MOV B,D
-		0x43 => unimplemented!(), 								// MOV B,E
-		0x44 => unimplemented!(), 								// MOV B,H
-		0x45 => unimplemented!(), 								// MOV B,L
-		0x46 => unimplemented!(), 								// MOV B,M
-		0x47 => unimplemented!(), 								// MOV B,A
-		0x48 => unimplemented!(), 								// MOV C,B
-		0x49 => unimplemented!(), 								// MOV C,C
-		0x4a => unimplemented!(), 								// MOV C,D
-		0x4b => unimplemented!(), 								// MOV C,E
-		0x4c => unimplemented!(), 								// MOV C,H
-		0x4d => unimplemented!(), 								// MOV C,L
-		0x4e => unimplemented!(), 								// MOV C,M
-		0x4f => unimplemented!(), 								// MOV C,A
-		0x50 => unimplemented!(), 								// MOV D,B
-		0x51 => unimplemented!(), 								// MOV D,C
-		0x52 => unimplemented!(), 								// MOV D,D
-		0x53 => unimplemented!(), 								// MOV D,E
-		0x54 => unimplemented!(), 								// MOV D,H
-		0x55 => unimplemented!(), 								// MOV D,L
-		0x56 => unimplemented!(), 								// MOV D,M
-		0x57 => unimplemented!(), 								// MOV D,A
-		0x58 => unimplemented!(), 								// MOV E,B
-		0x59 => unimplemented!(), 								// MOV E,C
-		0x5a => unimplemented!(), 								// MOV E,D
-		0x5b => unimplemented!(), 								// MOV E,E
-		0x5c => unimplemented!(), 								// MOV E,H
-		0x5d => unimplemented!(), 								// MOV E,L
-		0x5e => unimplemented!(), 								// MOV E,M
-		0x5f => unimplemented!(), 								// MOV E,A
-		0x60 => unimplemented!(), 								// MOV H,B
-		0x61 => unimplemented!(), 								// MOV H,C
-		0x62 => unimplemented!(), 								// MOV H,D
-		0x63 => unimplemented!(), 								// MOV H,E
-		0x64 => unimplemented!(), 								// MOV H,H
-		0x65 => unimplemented!(), 								// MOV H,L
-		0x66 => unimplemented!(), 								// MOV H,M
-		0x67 => unimplemented!(), 								// MOV H,A
-		0x68 => unimplemented!(), 								// MOV L,B
-		0x69 => unimplemented!(), 								// MOV L,C
-		0x6a => unimplemented!(), 								// MOV L,D
-		0x6b => unimplemented!(), 								// MOV L,E
-		0x6c => unimplemented!(), 								// MOV L,H
-		0x6d => unimplemented!(), 								// MOV L,L
-		0x6e => unimplemented!(), 								// MOV L,M
-		0x6f => unimplemented!(), 								// MOV L,A
-		0x70 => unimplemented!(), 								// MOV M,B
-		0x71 => unimplemented!(), 								// MOV M,C
-		0x72 => unimplemented!(), 								// MOV M,D
-		0x73 => unimplemented!(), 								// MOV M,E
-		0x74 => unimplemented!(), 								// MOV M,H
-		0x75 => unimplemented!(), 								// MOV M,L
-		0x77 => unimplemented!(), 								// MOV M,A
-		0x78 => unimplemented!(), 								// MOV A,B
-		0x79 => unimplemented!(), 								// MOV A,C
-		0x7a => unimplemented!(), 								// MOV A,D
-		0x7b => unimplemented!(), 								// MOV A,E
-		0x7c => unimplemented!(), 								// MOV A,H
-		0x7d => unimplemented!(), 								// MOV A,L
-		0x7e => unimplemented!(), 								// MOV A,M
-		0x7f => unimplemented!(), 								// MOV A,A
+		//0x40 => mov(&mut state.b, &state.b),					// MOV B,B
+		//0x41 => mov(&mut state.b, &state.c),					// MOV B,C
+		//0x42 => mov(&mut state.b, &state.d),					// MOV B,D
+		//0x43 => mov(&mut state.b, &state.e),					// MOV B,E
+		//0x44 => mov(&mut state.b, &state.h),					// MOV B,H
+		//0x45 => mov(&mut state.b, &state.l),					// MOV B,L
+		//0x46 => {
+		//	let memory = &state.memory[*pair(&state.h) as usize];
+		//	mov(&mut state.b, memory)
+		//},														// MOV B,M
+		//0x47 => mov(&mut state.b, &state.a),					// MOV B,A
+
+		//0x48 => mov(&mut state.b, &state.b),					// MOV C,B
+		//0x49 => mov(&mut state.b, &state.b),					// MOV C,C
+		//0x4a => mov(&mut state.b, &state.b),					// MOV C,D
+		//0x4b => mov(&mut state.b, &state.b),					// MOV C,E
+		//0x4c => mov(&mut state.b, &state.b),					// MOV C,H
+		//0x4d => mov(&mut state.b, &state.b),					// MOV C,L
+		//0x4e => mov(&mut state.b, &state.b),					// MOV C,M XXX
+		//0x4f => mov(&mut state.b, &state.b),					// MOV C,A
+
+		//0x50 => mov(&mut state.b, &state.b),					// MOV D,B
+		//0x51 => mov(&mut state.b, &state.b),					// MOV D,C
+		//0x52 => mov(&mut state.b, &state.b),					// MOV D,D
+		//0x53 => mov(&mut state.b, &state.b),					// MOV D,E
+		//0x54 => mov(&mut state.b, &state.b),					// MOV D,H
+		//0x55 => mov(&mut state.b, &state.b),					// MOV D,L
+		//0x56 => mov(&mut state.b, &state.b),					// MOV D,M XXX
+		//0x57 => mov(&mut state.b, &state.b),					// MOV D,A
+
+		//0x58 => mov(&mut state.b, &state.b),					// MOV E,B
+		//0x59 => mov(&mut state.b, &state.b),					// MOV E,C
+		//0x5a => mov(&mut state.b, &state.b),					// MOV E,D
+		//0x5b => mov(&mut state.b, &state.b),					// MOV E,E
+		//0x5c => mov(&mut state.b, &state.b),					// MOV E,H
+		//0x5d => mov(&mut state.b, &state.b),					// MOV E,L
+		//0x5e => mov(&mut state.b, &state.b),					// MOV E,M XXX
+		//0x5f => mov(&mut state.b, &state.b),					// MOV E,A
+
+		//0x60 => mov(&mut state.b, &state.b),					// MOV H,B
+		//0x61 => mov(&mut state.b, &state.b),					// MOV H,C
+		//0x62 => mov(&mut state.b, &state.b),					// MOV H,D
+		//0x63 => mov(&mut state.b, &state.b),					// MOV H,E
+		//0x64 => mov(&mut state.b, &state.b),					// MOV H,H
+		//0x65 => mov(&mut state.b, &state.b),					// MOV H,L
+		//0x66 => mov(&mut state.b, &state.b),					// MOV H,M
+		//0x67 => mov(&mut state.b, &state.b),					// MOV H,A
+
+		//0x68 => mov(&mut state.b, &state.b),					// MOV L,B
+		//0x69 => mov(&mut state.b, &state.b),					// MOV L,C
+		//0x6a => mov(&mut state.b, &state.b),					// MOV L,D
+		//0x6b => mov(&mut state.b, &state.b),					// MOV L,E
+		//0x6c => mov(&mut state.b, &state.b),					// MOV L,H
+		//0x6d => mov(&mut state.b, &state.b),					// MOV L,L
+		//0x6e => mov(&mut state.b, &state.b),					// MOV L,M
+		//0x6f => mov(&mut state.b, &state.b),					// MOV L,A
+
+		//0x70 => mov(&mut state.b, &state.b),					// MOV M,B
+		//0x71 => mov(&mut state.b, &state.b),					// MOV M,C
+		//0x72 => mov(&mut state.b, &state.b),					// MOV M,D
+		//0x73 => mov(&mut state.b, &state.b),					// MOV M,E
+		//0x74 => mov(&mut state.b, &state.b),					// MOV M,H
+		//0x75 => mov(&mut state.b, &state.b),					// MOV M,L
+		//0x77 => mov(&mut state.b, &state.b),					// MOV M,A
+
+		//0x78 => mov(&mut state.b, &state.b),					// MOV A,B
+		//0x79 => mov(&mut state.b, &state.b),					// MOV A,C
+		//0x7a => mov(&mut state.b, &state.b),					// MOV A,D
+		//0x7b => mov(&mut state.b, &state.b),					// MOV A,E
+		//0x7c => mov(&mut state.b, &state.b),					// MOV A,H
+		//0x7d => mov(&mut state.b, &state.b),					// MOV A,L
+		//0x7e => mov(&mut state.b, &state.b),					// MOV A,M
+		//0x7f => mov(&mut state.b, &state.b),					// MOV A,A
 
 		0x01 =>	{
 			let value = u16::from_le_bytes(instruction.raw.data);
@@ -322,6 +332,8 @@ pub fn execute(state: &mut State, instruction: Instruction) {
 		0xfd => unimplemented!(), 								// CALL a16
 		0xfe => unimplemented!(), 								// CPI d8
 		0xff => unimplemented!(), 								// RST 7
+
+		_ => unimplemented!(),
 	};
 }
 
@@ -340,6 +352,10 @@ fn mvi(dst: &mut u8, value: u8) {
 	*dst = value;
 }
 
+fn mov(dst: &mut u8, src: &u8) {
+	*dst = *src;
+}
+
 fn lxi(dst: &mut u16, value: u16) {
 	*dst = value;
 }
@@ -348,9 +364,19 @@ fn lxi(dst: &mut u16, value: u16) {
  * Arthimetic Group
  */
 
-/// TODO: flags
+/// Z,S,P,CY,AC FIXME
 fn add(accumulator: &mut u8, value: u8, flags: &mut ConditionFlags) {
-	*accumulator += value;
+	*accumulator = *accumulator + value;
+	let result = *accumulator + value;
+
+	flags.carry = bool::from((u16::from(*accumulator) + u16::from(value)) >> 8 != 0);
+
+	flags.zero = bool::from(result == 0);
+	flags.sign = bool::from((result as i8) < 0);
+	flags.parity = bool::from((result % 2) == 0);
+	//flags.carry = bool::from(*);
+	//flags.aux_carry = bool::from(result == 0);
+	
 }
 
 /*
