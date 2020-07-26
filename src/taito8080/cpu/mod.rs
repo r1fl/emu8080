@@ -1,7 +1,6 @@
 mod execute;
 
 use std::mem;
-use bitflags::bitflags;
 
 bitflags! {
 	struct ConditionFlags: u8 {
@@ -82,15 +81,17 @@ impl Registers {
 	}
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Derivative)]
+#[derivative(Debug)]
 pub struct State {
 	registers: Registers,
 	int_enable: bool,
+	#[derivative(Debug="ignore")]
 	memory: Vec<u8>,
 }
 
 impl State {
-	#![warn(missing_docs)]
+	#[warn(missing_docs)]
 	pub fn init(memory: Vec<u8>) -> Self {
 		Self { 
 			memory, 
